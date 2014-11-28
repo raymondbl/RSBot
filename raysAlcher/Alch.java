@@ -56,9 +56,8 @@ public class Alch extends Task<ClientContext>
     	{
     		reset.execute();
     	}
-		for(int i = 0; i < 2; i++)
+		while(!action.select())
 		{
-	    	action.select();
 			Condition.sleep(RandomCalc.millis(DOUBLEARRAY1, INTARRAY1));
 		}
     	if(!first && ctx.input.getLocation().equals(point))
