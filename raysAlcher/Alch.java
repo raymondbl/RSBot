@@ -1,6 +1,9 @@
 package raysAlcher;
 
+import java.awt.Point;
+
 import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.Action;
 import org.powerbot.script.rt6.ClientContext;
 import org.powerbot.script.rt6.Item;
 
@@ -14,19 +17,22 @@ public class Alch extends Task<ClientContext>
     private Task<ClientContext> reset;
     private boolean first = true;
     private int itemID;
+    private Point point;
+    private Action action;
     private static final double[] DOUBLEARRAY1 = 
     	{0.8, 1.0}; 	//arbitrary anti-pattern values
     private static final int[][] INTARRAY1 = 
-    	{ {23, 48}, {48, 60} };
+    	{ {15, 17}, {18, 21} };
     private static final double[] DOUBLEARRAY2 = 
     	{0.8, 0.92, 0.96, 0.99, 1.00};
     private static final int[][] INTARRAY2 = 
-    	{ {12, 16}, {10, 12}, {16, 18}, {18, 20}, {2576, 3185} };
+    	{ {12, 15}, {10, 12}, {15, 17}, {17, 19}, {2576, 3185} };
     
     public Alch(ClientContext ctx)
     {
         super(ctx);
         reset = new Reset(ctx);
+        action = ctx.combatBar.actionAt(0);
     }
     
     public boolean activate()
@@ -50,9 +56,12 @@ public class Alch extends Task<ClientContext>
     	{
     		reset.execute();
     	}
-    	ctx.input.send("0");
-		Condition.sleep(RandomCalc.millis(DOUBLEARRAY1, INTARRAY1));
-    	if(!first)
+		for(int i = 0; i < 2; i++)
+		{
+	    	action.select();
+			Condition.sleep(RandomCalc.millis(DOUBLEARRAY1, INTARRAY1));
+		}
+    	if(!first && ctx.input.getLocation().equals(point))
     	{
     		ctx.input.click(true);
     	}
@@ -60,7 +69,9 @@ public class Alch extends Task<ClientContext>
     	{
     		item.interact("Cast");
     		first = false;
+    		point = ctx.input.getPressLocation();
     	}
+		
     	((Reset)reset).increment();
     	Condition.sleep(RandomCalc.millis(DOUBLEARRAY2, INTARRAY2));
     }
@@ -104,7 +115,7 @@ public class Alch extends Task<ClientContext>
     	
     	private void resetRandomInt()
     	{
-    		randomInt = RandomCalc.nextInt(5, 20);
+    		randomInt = RandomCalc.nextGaussian(5, 20, 1.5);
     	}
     	
     	private void resetCount()

@@ -11,7 +11,7 @@ public class RandomCalc extends org.powerbot.script.Random
     	{
     		if( interval <= dArray[i])
     		{
-    			return Random.nextInt(iArray[i][0], iArray[i][1]);
+    			return Random.nextGaussian(iArray[i][0], iArray[i][1], 1.58);
     		}
     	}
     	return 0;

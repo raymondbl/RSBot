@@ -37,9 +37,9 @@ public class Withdraw extends Task<ClientContext>
 	public void execute() 
 	{
 		ctx.bank.open();
-		Condition.sleep(RandomCalc.nextInt(146, 307));
-		ctx.input.send("2");
-		Condition.sleep(RandomCalc.nextInt(146, 307));
+		Condition.sleep(RandomCalc.nextGaussian(146, 307, 1.5));
+		ctx.bank.presetGear2();
+		Condition.sleep(RandomCalc.nextGaussian(146, 307, 1.5));
 	}
 
 }

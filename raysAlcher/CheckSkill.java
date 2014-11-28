@@ -16,7 +16,7 @@ public class CheckSkill extends Task<ClientContext>
 	private Component magic;
 	public boolean activate()
 	{
-		return RandomCalc.nextDouble() >= 0.998;
+		return RandomCalc.nextDouble() >= 0.9967;
 	}
 	
 	public void execute()
@@ -26,7 +26,7 @@ public class CheckSkill extends Task<ClientContext>
 			ctx.input.send("h");
 			magic = ctx.widgets.component(1466, 7).component(15);
 			ctx.input.move(magic.nextPoint());
-			Condition.sleep(RandomCalc.nextInt(2000, 6000));
+			Condition.sleep(RandomCalc.nextGaussian(2000, 6000, 1.5));
 			ctx.input.send("b");
 		}
 	}

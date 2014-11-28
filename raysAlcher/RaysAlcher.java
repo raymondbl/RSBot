@@ -1,5 +1,6 @@
 package raysAlcher;
 
+import org.powerbot.script.Condition;
 import org.powerbot.script.MessageEvent;
 import org.powerbot.script.MessageListener;
 import org.powerbot.script.PaintListener;
@@ -16,6 +17,8 @@ import java.lang.Override;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 
@@ -30,7 +33,9 @@ public class RaysAlcher extends PollingScript<ClientContext>
 	private Gui gui;
 	private int itemID;
 	private int casts;
-	private String status = "Waiting for input...";
+	private int coinsAlched;
+	private boolean lastWithdraw;
+	private String status;
 	private StatTracker statTracker;
 	private JButton submitButton;
 	
@@ -46,6 +51,7 @@ public class RaysAlcher extends PollingScript<ClientContext>
     	itemID = gui.getItemID();
     	((Alch)alch).setItemID(itemID);
     	((Withdraw)withdraw).setItemID(itemID);
+    	statTracker.setPrice(itemID);
     	tasks.addAll(Arrays.asList(alch, withdraw, checkSkill));
     	submitButton = gui.getButton();
     	submitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -68,6 +74,12 @@ public class RaysAlcher extends PollingScript<ClientContext>
     			}
     			else if(task instanceof Withdraw)
     			{
+    				if(lastWithdraw)
+    				{
+    					status = "Run out of items to alch.";
+    					Condition.sleep(100);
+    					ctx.controller.stop();
+    				}
     				status = "Banking";
     				((Alch)alch).setFirstTrue();
     			}
@@ -82,16 +94,49 @@ public class RaysAlcher extends PollingScript<ClientContext>
     }
     
     @Override
-    public void messaged(MessageEvent msg) {
-        if(msg.text().contains("coins have been"))
-        {
-        	((Alch)(alch)).resetCount();
-        	casts++;
-        }
-    	if (msg.text().contains("Item could not be found:") || 
-        		msg.text().contains("You do not have enough")) {
-            ctx.controller().stop();
-        }
+    public void messaged(MessageEvent msg) 
+    {
+    	switch(msg.text())
+    	{
+    		case "coins have been":
+    		{
+    			if(coinsAlched == 0)
+            	{
+            		String text = msg.text();
+            		Pattern pattern = Pattern.compile("((\\d+)(,)*)+");
+            		Matcher matcher = pattern.matcher(text);
+            		String coins = "";
+            		if(matcher.find())
+            		{
+            		coins = matcher.group();
+            		}
+            		coins = coins.replaceAll(",", "");
+            		coinsAlched = Integer.parseInt(coins);
+    	        	statTracker.setCoins(coinsAlched);
+    	        	
+            	}
+    			((Alch)(alch)).resetCount();
+            	casts++;
+            	statTracker.updateProfit();
+    			break;
+    		}
+    		case "You do not have enough" :
+    		{
+        		status = "Run out of nature runes.";
+        		Condition.sleep(100);
+                ctx.controller.stop();
+                break;
+            }
+    		case "Item could not be found:" :
+    		{
+    			lastWithdraw = true;
+    			break;
+    		}
+    		default:
+    		{
+    			break;
+    		}
+    	}
     }
 
 	@Override
@@ -110,25 +155,19 @@ public class RaysAlcher extends PollingScript<ClientContext>
 			gui.setCastsHr(statTracker.getPerHr(casts, time));
 			gui.setLevelsGained(statTracker.getLevelsGained());
 			gui.setStatus(status);
+			gui.setProfit(statTracker.getProfit());
+			gui.setProfitHr(statTracker.getProfitHr(time));
 			setRunTime(time);
 		}
 	}
 	
 	public void setRunTime(long time)
 	{
-		long remaining;
-		int hours = (int)(time / 3600000);
-		remaining = time % 3600000;
-		int minutes = (int)(remaining / 60000);
-		remaining = time % 60000;
-		int seconds = (int)(remaining / 1000);
-		String sMinutes = 
-				(new Integer(minutes).toString().length() < 2) 
-				? ("0" + minutes) : "" + minutes;
-		String sSeconds = 
-				(new Integer(seconds).toString().length() < 2)
-				? ("0" + seconds) : "" + seconds;
-		gui.setRunTime(hours + ":" + sMinutes + ":" + sSeconds);
+		int hours = (int)(time / 3600000 % 24);
+		int minutes = (int)(time / 60000 % 60);
+		int seconds = (int)(time / 1000 % 60);
+		
+		gui.setRunTime(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 	}
 	
 	public void submitButtonActionPerformed(java.awt.event.ActionEvent evt)
@@ -136,6 +175,7 @@ public class RaysAlcher extends PollingScript<ClientContext>
 		itemID = gui.getItemID();
 		((Alch)alch).setItemID(itemID);
     	((Withdraw)withdraw).setItemID(itemID);
+    	coinsAlched = 0;
 	}
 
 }

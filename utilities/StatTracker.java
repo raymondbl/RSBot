@@ -1,11 +1,18 @@
 package utilities;
 
 import org.powerbot.script.rt6.ClientContext;
+import org.powerbot.script.rt6.GeItem;
+import org.powerbot.script.rt6.Skills;
 
 public class StatTracker extends Task<ClientContext> {
 
 	private final int EXP0, LEVEL0;
 	private final long TIME0;
+	private int itemPrice;
+	private int natureRunePrice;
+	private int profit;
+	private int totalProfit;
+	private static final int NATURE_RUNE_ID = 561;
 	
 	public StatTracker(ClientContext ctx)
 	{
@@ -36,15 +43,41 @@ public class StatTracker extends Task<ClientContext> {
 		return (int)((double)x / ((double)time / 3600000.0));
 	}
 
+	public void setPrice(int itemID)
+	{
+		itemPrice = GeItem.price(itemID);
+		natureRunePrice = GeItem.price(NATURE_RUNE_ID);
+	}
+	
+	public void setCoins(int coinsAlched)
+	{
+		profit = coinsAlched - itemPrice - natureRunePrice;
+	}
+	
+	public void updateProfit()
+	{
+		totalProfit += profit;
+	}
+	
+	public int getProfit()
+	{
+		return totalProfit;
+	}
+	
+	public int getProfitHr(long time)
+	{
+		return getPerHr(totalProfit, time);
+	}
+	
+	
 	@Override
-	public boolean activate() {
-		// TODO Auto-generated method stub
+	public boolean activate() 
+	{
 		return false;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
+	public void execute() 
+	{		
 	}
 }

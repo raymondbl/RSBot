@@ -1,17 +1,22 @@
 package raysAlcher;
 
 import org.powerbot.script.Condition;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.Font;
-import javax.swing.GroupLayout;
 
+import java.awt.Font;
+import java.util.concurrent.Callable;
+
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle;
+
+@SuppressWarnings("serial")
 public class Gui extends javax.swing.JFrame {
 
     public Gui() {
         initComponents();
-        next();
     }
     private JLabel currentAction;
     private JTextField input;
@@ -30,6 +35,10 @@ public class Gui extends javax.swing.JFrame {
     private JLabel jLevelsGained;
     private JLabel levelsGained;
     private JLabel runTime;
+    private JLabel jProfit;
+    private JLabel jProfitHr;
+    private JLabel profit;
+    private JLabel profitHr;
     private int itemID;
     
 
@@ -52,6 +61,10 @@ public class Gui extends javax.swing.JFrame {
         jLevelsGained = new JLabel();
         levelsGained = new JLabel();
         runTime = new JLabel();
+        jProfit = new JLabel();
+        jProfitHr = new JLabel();
+        profit = new JLabel();
+        profitHr = new JLabel();
 
         Font font = new Font("Times New Roman", 0, 14);
         
@@ -72,7 +85,7 @@ public class Gui extends javax.swing.JFrame {
         });
 
         jMagicExpHr.setFont(font);
-        jMagicExpHr.setText("Magic Exp/hr");
+        jMagicExpHr.setText("Magic Exp/hr:");
 
         jCurrentAction.setFont(font);
         jCurrentAction.setText("Current Action:");
@@ -80,76 +93,89 @@ public class Gui extends javax.swing.JFrame {
         jCasts.setFont(font); 
         jCasts.setText("Casts:");
 
-        jCastsHr.setFont(font); // NOI18N
+        jCastsHr.setFont(font);
         jCastsHr.setText("Casts/hr:");
-
-        jMagicExpGained.setFont(font); // NOI18N
+        jMagicExpGained.setFont(font);
         jMagicExpGained.setText("Magic Exp gained:");
 
-        currentAction.setFont(font); // NOI18N
+        currentAction.setFont(font);
         currentAction.setText("");
 
-        casts.setFont(font); // NOI18N
+        casts.setFont(font);
         casts.setText("");
 
-        castsHr.setFont(font); // NOI18N
+        castsHr.setFont(font);  
         castsHr.setText("");
 
-        magicExpGained.setFont(font); // NOI18N
+        magicExpGained.setFont(font);  
         magicExpGained.setText("");
 
-        magicExpHr.setFont(font); // NOI18N
+        magicExpHr.setFont(font);  
         magicExpHr.setText("");
         
-        jLevelsGained.setFont(font); // NOI18N
-        jLevelsGained.setText("Levels gained");
+        jLevelsGained.setFont(font);  
+        jLevelsGained.setText("Levels gained:");
 
-        levelsGained.setFont(font); // NOI18N
+        levelsGained.setFont(font);  
         levelsGained.setText("");
         
         runTime.setFont(font);
         runTime.setText("");
+        
+        jProfit.setFont(font);
+        jProfit.setText("Profit:");
+        
+        profit.setFont(font);
+        profit.setText("");
+        
+        jProfitHr.setFont(font);
+        jProfitHr.setText("Profit/hr:");
+        
+        profitHr.setFont(font);
+        profitHr.setText("");
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(nameLabel)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(runTime, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(input, GroupLayout.PREFERRED_SIZE, 171, GroupLayout.PREFERRED_SIZE)
+                            .addGap(35, 35, 35)
+                            .addComponent(submitButton)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(149, 149, 149)
-                        .addComponent(title))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                            .addComponent(jCurrentAction)
-                                            .addComponent(jCasts)
-                                            .addComponent(jCastsHr)
-                                            .addComponent(jMagicExpGained)
-                                            .addComponent(jMagicExpHr)
-                                            .addComponent(jLevelsGained, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
-                                        .addGap(24, 24, 24)
-                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(currentAction, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(casts, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(castsHr, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                                            .addComponent(magicExpGained, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(magicExpHr, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(levelsGained, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(input, GroupLayout.PREFERRED_SIZE, 171, GroupLayout.PREFERRED_SIZE)
-                                        .addGap(35, 35, 35)
-                                        .addComponent(submitButton)))
-                                .addGap(0, 91, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(nameLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(runTime, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap())
+                            .addComponent(jCurrentAction)
+                            .addComponent(jCasts)
+                            .addComponent(jCastsHr)
+                            .addComponent(jMagicExpGained)
+                            .addComponent(jMagicExpHr)
+                            .addComponent(jLevelsGained, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jProfit))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(profit)
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(currentAction, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(casts, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(castsHr, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                                .addComponent(magicExpGained, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(magicExpHr, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(levelsGained, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(profitHr)))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jProfitHr))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(96, 96, 96)
+                .addComponent(title))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -164,19 +190,19 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(submitButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jCurrentAction)
                     .addComponent(currentAction))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jCasts)
                     .addComponent(casts))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jCastsHr)
                     .addComponent(castsHr))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jMagicExpGained)
                     .addComponent(magicExpGained))
@@ -184,15 +210,23 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jMagicExpHr)
                     .addComponent(magicExpHr))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLevelsGained)
                     .addComponent(levelsGained))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(jProfit)
+                    .addComponent(profit))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(jProfitHr)
+                    .addComponent(profitHr))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
-    }// </editor-fold>                        
+    }                     
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
@@ -202,60 +236,38 @@ public class Gui extends javax.swing.JFrame {
     
     public int getItemID() 
     {
-        while(itemID == 0) 
-        {
-            Condition.sleep(1000);
-        }
-        return itemID;
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public void next()
-    {
-
-    	try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-    }              
-    
-    public void setCasts(Integer c)
-    {
-    	casts.setText(c.toString());
+    	Condition.wait(new Callable<Boolean>(){
+    	    @Override
+    	    public Boolean call() throws Exception {
+    	        return itemID != 0;
+    	    }
+    	}, 1000, Integer.MAX_VALUE);
+    	return itemID;
     }
     
-    public void setCastsHr(Integer cHr)
+    public void setCasts(int c)
     {
-    	castsHr.setText(cHr.toString());
+    	casts.setText(String.valueOf(c));
     }
     
-    public void setMagicExpGained(Integer exp)
+    public void setCastsHr(int cHr)
     {
-    	magicExpGained.setText(exp.toString());
+    	castsHr.setText(String.valueOf(cHr));
     }
     
-    public void setMagicExpHr(Integer expHr)
+    public void setMagicExpGained(int exp)
     {
-    	magicExpHr.setText(expHr.toString());
+    	magicExpGained.setText(String.valueOf(exp));
     }
     
-    public void setLevelsGained(Integer levels)
+    public void setMagicExpHr(int expHr)
     {
-    	levelsGained.setText(levels.toString());
+    	magicExpHr.setText(String.valueOf(expHr));
+    }
+    
+    public void setLevelsGained(int levels)
+    {
+    	levelsGained.setText(String.valueOf(levels));
     }
     
     public void setStatus(String status)
@@ -268,6 +280,15 @@ public class Gui extends javax.swing.JFrame {
     	this.runTime.setText(runTime);
     }
     
+    public void setProfit(int profit)
+    {
+    	this.profit.setText(String.valueOf(profit));
+    }
+    
+    public void setProfitHr(int profitHr)
+    {
+    	this.profitHr.setText(String.valueOf(profitHr));
+    }
     public JButton getButton()
     {
     	return submitButton;
