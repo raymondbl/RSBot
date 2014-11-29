@@ -2,8 +2,6 @@ package raysAlcher;
 
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt6.ClientContext;
-import org.powerbot.script.rt6.Item;
-
 import utilities.RandomCalc;
 import utilities.Task;
 
@@ -22,16 +20,7 @@ public class Withdraw extends Task<ClientContext>
 	}
 	public boolean activate()
 	{
-		int i;
-		Item[] items = ctx.backpack.items();
-        for(i = 27; i >= 0; i--)
-        {
-            if(items[i].id() == itemID)
-            {
-                return false;
-            }
-        }
-        return true;
+    	return ctx.backpack.select().id(itemID).isEmpty();
 	}
 	
 	public void execute() 

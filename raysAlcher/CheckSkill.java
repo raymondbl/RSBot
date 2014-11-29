@@ -27,6 +27,7 @@ public class CheckSkill extends Task<ClientContext>
 			magic = ctx.widgets.component(1466, 7).component(15);
 			ctx.input.move(magic.nextPoint());
 			Condition.sleep(RandomCalc.nextGaussian(2000, 6000, 1.5));
+			ctx.input.defocus();
 			ctx.input.send("b");
 		}
 	}

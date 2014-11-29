@@ -96,54 +96,44 @@ public class RaysAlcher extends PollingScript<ClientContext>
     @Override
     public void messaged(MessageEvent msg) 
     {
-    	switch(msg.text())
+    	if(msg.text().contains("coins have been"))
     	{
-    		case "coins have been":
-    		{
-    			if(coinsAlched == 0)
-            	{
-            		String text = msg.text();
-            		Pattern pattern = Pattern.compile("((\\d+)(,)*)+");
-            		Matcher matcher = pattern.matcher(text);
-            		String coins = "";
-            		if(matcher.find())
-            		{
-            		coins = matcher.group();
-            		}
-            		coins = coins.replaceAll(",", "");
-            		coinsAlched = Integer.parseInt(coins);
-    	        	statTracker.setCoins(coinsAlched);
-    	        	
-            	}
-    			((Alch)(alch)).resetCount();
-            	casts++;
-            	statTracker.updateProfit();
-    			break;
-    		}
-    		case "You do not have enough" :
-    		{
-        		status = "Run out of nature runes.";
-        		Condition.sleep(100);
-                ctx.controller.stop();
-                break;
-            }
-    		case "Item could not be found:" :
-    		{
-    			lastWithdraw = true;
-    			break;
-    		}
-    		default:
-    		{
-    			break;
-    		}
+			if(coinsAlched == 0)
+        	{
+        		String text = msg.text();
+        		Pattern pattern = Pattern.compile("((\\d+)(,)*)+");
+        		Matcher matcher = pattern.matcher(text);
+        		String coins = "";
+        		if(matcher.find())
+        		{
+        		coins = matcher.group();
+        		}
+        		coins = coins.replaceAll(",", "");
+        		coinsAlched = Integer.parseInt(coins);
+	        	statTracker.setCoins(coinsAlched);
+	        	
+        	}
+			((Alch)(alch)).resetCount();
+        	casts++;
+        	statTracker.updateProfit();
     	}
+		if(msg.text().contains("You do not have enough"))
+		{
+    		status = "Run out of nature runes.";
+    		Condition.sleep(100);
+            ctx.controller.stop();
+        }
+		if(msg.text().contains("Item could not be found:"))
+		{
+			lastWithdraw = true;
+		}
     }
-
+    
 	@Override
 	public void repaint(Graphics g) 
 	{
 		Point p = ctx.input.getLocation();
-		g.drawLine((p.x - 4), p.y, p.x + 4, p.y);
+		g.drawLine(p.x - 4, p.y, p.x + 4, p.y);
 		g.drawLine(p.x, p.y - 4, p.x, p.y + 4);
 		if(!tasks.isEmpty())
 		{

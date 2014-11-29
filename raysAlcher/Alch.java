@@ -37,17 +37,7 @@ public class Alch extends Task<ClientContext>
     
     public boolean activate()
     {
-    	int i;
-    	Item[] items = ctx.backpack.items();
-        for(i = 27; i >= 0; i--)
-        {
-            if(items[i].id() == itemID)
-            {
-                item = ctx.backpack.itemAt(i);
-                break;
-            }
-        }
-        return i > -1;
+    	return !ctx.backpack.select().id(itemID).isEmpty();
     }
 
     public void execute()
@@ -60,17 +50,20 @@ public class Alch extends Task<ClientContext>
 		{
 			Condition.sleep(RandomCalc.millis(DOUBLEARRAY1, INTARRAY1));
 		}
-    	if(!first && ctx.input.getLocation().equals(point))
+    	if(!first && ctx.input.getLocation().equals(point) && (ctx.client().isSpellSelected()))
     	{
     		ctx.input.click(true);
     	}
-    	else 
+    	else if(first || !ctx.input.getLocation().equals(point))
     	{
     		item.interact("Cast");
     		first = false;
     		point = ctx.input.getPressLocation();
     	}
-		
+    	else if(!ctx.menu.items()[0].contains("Cast"))
+    	{
+    		return;
+    	}
     	((Reset)reset).increment();
     	Condition.sleep(RandomCalc.millis(DOUBLEARRAY2, INTARRAY2));
     }

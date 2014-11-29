@@ -2,7 +2,6 @@ package utilities;
 
 import org.powerbot.script.rt6.ClientContext;
 import org.powerbot.script.rt6.GeItem;
-import org.powerbot.script.rt6.Skills;
 
 public class StatTracker extends Task<ClientContext> {
 
