@@ -15,10 +15,10 @@ public class Alch extends Task<ClientContext>
 {
     private Item item;
     private Task<ClientContext> reset;
-    private boolean first = true;
+    private boolean first = true;		//determines if the mouse is on the item
     private int itemID;
-    private Point point;
-    private Action action;
+    private Point point;				//point where the mouse clicks the item
+    private Action action;				//reference value for alch on the combatBar
     private static final double[] DOUBLEARRAY1 = 
     	{0.8, 1.0}; 	//arbitrary anti-pattern values
     private static final int[][] INTARRAY1 = 
@@ -35,11 +35,18 @@ public class Alch extends Task<ClientContext>
         action = ctx.combatBar.actionAt(0);
     }
     
+    @Override
     public boolean activate()
     {
-    	return !ctx.backpack.select().id(itemID).isEmpty();
+    	if(!ctx.backpack.select().id(itemID).isEmpty())
+    	{
+	    	item = ctx.backpack.id(itemID).reverse().peek();
+	    	return true;
+    	}
+    	return false;
     }
 
+    @Override
     public void execute()
     {
     	if(reset.activate())
@@ -50,7 +57,7 @@ public class Alch extends Task<ClientContext>
 		{
 			Condition.sleep(RandomCalc.millis(DOUBLEARRAY1, INTARRAY1));
 		}
-    	if(!first && ctx.input.getLocation().equals(point) && (ctx.client().isSpellSelected()))
+    	if(!first && ctx.input.getLocation().equals(point) && ctx.client().isSpellSelected())
     	{
     		ctx.input.click(true);
     	}
@@ -60,14 +67,14 @@ public class Alch extends Task<ClientContext>
     		first = false;
     		point = ctx.input.getPressLocation();
     	}
-    	else if(!ctx.menu.items()[0].contains("Cast"))
+    	else if(!ctx.client().isSpellSelected())
     	{
     		return;
     	}
+    	
     	((Reset)reset).increment();
     	Condition.sleep(RandomCalc.millis(DOUBLEARRAY2, INTARRAY2));
     }
-    
     
     public void setFirstTrue()
     {
@@ -90,9 +97,10 @@ public class Alch extends Task<ClientContext>
     	public Reset(ClientContext ctx) 
     	{
     		super(ctx);
+    		resetRandomInt();
     	}
     	
-    	private int count;
+    	private int count;		//The number of clicks that have occured before an alch
     	private int randomInt;
 
     	public boolean activate()
@@ -120,7 +128,7 @@ public class Alch extends Task<ClientContext>
     		setFirstTrue();
     	}
     	
-    	public void increment()
+    	private void increment()
     	{
     		count++;
     	}

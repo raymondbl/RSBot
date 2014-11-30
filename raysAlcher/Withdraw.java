@@ -14,15 +14,13 @@ public class Withdraw extends Task<ClientContext>
 		super(ctx);
 	}
 	
-	public void setItemID(int itemID)
-	{
-		this.itemID = itemID;
-	}
+	@Override
 	public boolean activate()
 	{
     	return ctx.backpack.select().id(itemID).isEmpty();
 	}
 	
+	@Override
 	public void execute() 
 	{
 		ctx.bank.open();
@@ -30,5 +28,11 @@ public class Withdraw extends Task<ClientContext>
 		ctx.bank.presetGear2();
 		Condition.sleep(RandomCalc.nextGaussian(146, 307, 1.5));
 	}
+	
+	public void setItemID(int itemID)
+	{
+		this.itemID = itemID;
+	}
+	
 
 }

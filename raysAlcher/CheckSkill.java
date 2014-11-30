@@ -13,7 +13,9 @@ public class CheckSkill extends Task<ClientContext>
 	public CheckSkill(ClientContext ctx) {
 		super(ctx);
 	}
+	
 	private Component magic;
+	
 	public boolean activate()
 	{
 		return RandomCalc.nextDouble() >= 0.9967;
@@ -23,7 +25,7 @@ public class CheckSkill extends Task<ClientContext>
 	{
 		if (!ctx.hud.opened(Hud.Window.SKILLS))
 		{
-			ctx.input.send("h");
+			ctx.input.send("h");	//no other way to open the window with a key
 			magic = ctx.widgets.component(1466, 7).component(15);
 			ctx.input.move(magic.nextPoint());
 			Condition.sleep(RandomCalc.nextGaussian(2000, 6000, 1.5));

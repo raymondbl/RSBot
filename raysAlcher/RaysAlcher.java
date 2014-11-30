@@ -34,8 +34,8 @@ public class RaysAlcher extends PollingScript<ClientContext>
 	private int itemID;
 	private int casts;
 	private int coinsAlched;
-	private boolean lastWithdraw;
-	private String status;
+	private boolean lastWithdraw;	//if there are no more items to alch in bank
+	private String status;			//"current action" in gui
 	private StatTracker statTracker;
 	private JButton submitButton;
 	
@@ -98,6 +98,7 @@ public class RaysAlcher extends PollingScript<ClientContext>
     {
     	if(msg.text().contains("coins have been"))
     	{
+    		//parse the coins gained per cast
 			if(coinsAlched == 0)
         	{
         		String text = msg.text();
